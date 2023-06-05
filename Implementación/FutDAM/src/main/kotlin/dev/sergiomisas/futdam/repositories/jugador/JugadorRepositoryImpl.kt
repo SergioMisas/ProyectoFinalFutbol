@@ -4,10 +4,11 @@ import dev.sergiomisas.futdam.models.Jugador
 import dev.sergiomisas.futdam.services.database.DatabaseManager
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
 import java.sql.Statement
 
-class JugadorRepositoryImpl : JugadorRepository, KoinComponent {
-    val database: DatabaseManager by inject()
+class JugadorRepositoryImpl(val database: DatabaseManager) : JugadorRepository {
+
     val connection get() = database.connection
 
     override fun findAllByTeam(idEquipo: Long): List<Jugador> {

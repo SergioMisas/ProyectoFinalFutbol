@@ -2,14 +2,10 @@ package dev.sergiomisas.futdam.repositories.equipo
 
 import dev.sergiomisas.futdam.models.Equipo
 import dev.sergiomisas.futdam.services.database.DatabaseManager
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
 import java.sql.Statement
 
 
-class EquipoRepositoryImpl : EquipoRepository, KoinComponent {
-
-    val databaseManager: DatabaseManager by inject()
+class EquipoRepositoryImpl(private val databaseManager: DatabaseManager) : EquipoRepository {
     val connection get() = databaseManager.connection
 
     override fun findByCountry(pais: String): List<Equipo> {

@@ -3,27 +3,32 @@ package dev.sergiomisas.futdam.services.database
 import dev.sergiomisas.futdam.config.AppConfig
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
+import org.koin.core.qualifier.named
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.sql.DriverManager
 
-class DatabaseManager() : KoinComponent {
+class DatabaseManager(private val appConfig: AppConfig){
 
-    private val appConfig: AppConfig by inject()
+
     val connection get() = DriverManager.getConnection(appConfig.dbUrl)
 
     init {
-        createDatabase()
-        initDatabase()
+        if (!Files.exists(Paths.get(appConfig.dbPath))) {
+            createDatabase()
+            initDatabase()
+        }
     }
 
     fun createDatabase() {
         connection.use { con ->
             val sqlEquipo = """
                 CREATE TABLE IF NOT EXISTS equipo (
-                    id INT PRIMARY KEY AUTOINCREMENT,
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                     nombre TEXT NOT NULL,
                     pais TEXT NOT NULL,
                     anyo_fundacion INT NOT NULL,
-                    liga TEXT NOT NULL,
+                    liga TEXT NOT NULL
                 );
             """.trimIndent()
 
@@ -32,7 +37,7 @@ class DatabaseManager() : KoinComponent {
 
             val sqlJugador = """
                 CREATE TABLE IF NOT EXISTS jugador (
-                    id INT PRIMARY KEY AUTOINCREMENT,
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                     nombre TEXT NOT NULL,
                     apellidos TEXT NOT NULL,
                     edad INT NOT NULL,
@@ -40,7 +45,7 @@ class DatabaseManager() : KoinComponent {
                     dorsal INT NOT NULL,
                     apodo TEXT NOT NULL,
                     posicion TEXT NOT NULL,
-                    id_equipo FOREIGN KEY REFERENCES equipo(id)   
+                    id_equipo INTEGER REFERENCES equipo(id)   
                 );
             """.trimIndent()
 

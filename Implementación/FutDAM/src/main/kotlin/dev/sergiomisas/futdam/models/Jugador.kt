@@ -10,7 +10,7 @@ data class Jugador(
     val apodo: String,
     val posicion: PosicionJugador,
     val idEquipo: Long = 0
-    ) {
+) {
     enum class PosicionJugador {
         PORTERO, DEFENSA, CENTROCAMPISTA, DELANTERO
     }

@@ -3,9 +3,11 @@ module dev.sergiomisas.futdam {
     requires javafx.fxml;
     requires kotlin.stdlib;
     requires koin.core.jvm;
+    requires koin.logger.slf4j;
+    requires org.slf4j;
+    requires io.github.microutils.kotlinlogging;
     requires java.sql;
     requires com.google.gson;
-    requires simple.xml;
 
 
     opens dev.sergiomisas.futdam to javafx.fxml;
@@ -13,5 +15,4 @@ module dev.sergiomisas.futdam {
 
     opens dev.sergiomisas.futdam.controllers to javafx.fxml;
     exports dev.sergiomisas.futdam.controllers;
-
 }

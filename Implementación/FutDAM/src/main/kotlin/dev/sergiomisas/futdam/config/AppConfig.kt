@@ -1,43 +1,36 @@
 package dev.sergiomisas.futdam.config
 
+import mu.KotlinLogging
 import java.io.File
 import java.nio.file.Files
 import java.nio.file.Paths
-import java.util.Properties
+import java.util.*
 
 class AppConfig {
 
     lateinit var dbUrl: String
+    lateinit var dbPath: String
     lateinit var dataPath: String
     lateinit var jsonPath: String
-    lateinit var htmlPath: String
-    lateinit var csvPath: String
-    lateinit var xmlPath: String
+
+    val logger = KotlinLogging.logger {}
 
     init {
-        loadPropeties()
+        loadProperties()
         initStorage()
     }
 
-
-
-    private fun loadPropeties() {
+    private fun loadProperties() {
         val properties = Properties()
-        properties.load(ClassLoader.getSystemResourceAsStream("properties/config.properties"))
+        properties.load(ClassLoader.getSystemResourceAsStream("config.properties"))
+        logger.warn { "Properties loaded: $properties" }
         dbUrl = properties.getProperty("db.url", "jdbc:sqlite:futdam.db")
+        dbPath = properties.getProperty("db.path", "futdam.db")
         dataPath = properties.getProperty("data.path", "data")
         jsonPath = dataPath + File.separator + properties.getProperty("json.path", "json")
-        htmlPath = dataPath + File.separator + properties.getProperty("html.path", "html")
-        csvPath = dataPath + File.separator + properties.getProperty("csv.path", "csv")
-        xmlPath = dataPath + File.separator + properties.getProperty("xml.path", "xml")
-
     }
 
     private fun initStorage() {
         Files.createDirectories(Paths.get(jsonPath))
-        Files.createDirectories(Paths.get(htmlPath))
-        Files.createDirectories(Paths.get(csvPath))
-        Files.createDirectories(Paths.get(xmlPath))
     }
-
 }

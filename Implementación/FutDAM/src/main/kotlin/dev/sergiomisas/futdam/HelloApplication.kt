@@ -7,21 +7,21 @@ import javafx.scene.Scene
 import javafx.stage.Stage
 import org.koin.core.context.startKoin
 
-class FutdamApplication : Application() {
+class HelloApplication : Application() {
     override fun start(stage: Stage) {
         startKoin {
             printLogger()
             modules(koinModule)
         }
-        val fxmlLoader = FXMLLoader(FutdamApplication::class.java.getResource("views/main-view.fxml"))
-        val scene = Scene(fxmlLoader.load(), 320.0, 240.0)
-        stage.title = "Hello!"
+        val fxmlLoader = FXMLLoader(HelloApplication::class.java.getResource("hello-view.fxml"))
+        val scene = Scene(fxmlLoader.load())
+        stage.title = "FutDAM"
         stage.scene = scene
+        stage.isResizable = false
         stage.show()
     }
 }
 
 fun main() {
-
-    Application.launch(FutdamApplication::class.java)
+    Application.launch(HelloApplication::class.java)
 }
