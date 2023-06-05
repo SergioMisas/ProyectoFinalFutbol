@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="futdam.db" uuid="99aec6a5-c984-4550-a8f9-0f639605ebf9">
+    <data-source source="LOCAL" name="futdam.db" uuid="7277fa65-40ed-41b6-9274-1a3ac31c1d16">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:futdam.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/../ProyectoFinalFutbol/Implementación/FutDAM/futdam.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>

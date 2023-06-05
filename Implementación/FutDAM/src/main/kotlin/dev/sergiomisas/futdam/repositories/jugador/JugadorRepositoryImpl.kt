@@ -2,9 +2,6 @@ package dev.sergiomisas.futdam.repositories.jugador
 
 import dev.sergiomisas.futdam.models.Jugador
 import dev.sergiomisas.futdam.services.database.DatabaseManager
-import org.koin.core.component.KoinComponent
-import org.koin.core.component.inject
-import org.koin.core.qualifier.named
 import java.sql.Statement
 
 class JugadorRepositoryImpl(val database: DatabaseManager) : JugadorRepository {
@@ -15,7 +12,7 @@ class JugadorRepositoryImpl(val database: DatabaseManager) : JugadorRepository {
         val jugadoresFound = mutableListOf<Jugador>()
         connection.use { con ->
             val sql = """
-                SELECT * FROM jugador WHERE id = ?
+                SELECT * FROM jugador WHERE id_equipo = ?
             """.trimIndent()
 
             val stmt = con.prepareStatement(sql)
@@ -48,7 +45,8 @@ class JugadorRepositoryImpl(val database: DatabaseManager) : JugadorRepository {
         val newId: Long
         connection.use { con ->
             val sql = """
-                INSERT INTO jugador(nombre, apellidos, edad, nacionalidad, dorsal, posicion, id_equipo) VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO jugador(nombre, apellidos, edad, nacionalidad, dorsal, apodo, posicion, id_equipo)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             """.trimIndent()
 
             val stmt = con.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
@@ -58,11 +56,12 @@ class JugadorRepositoryImpl(val database: DatabaseManager) : JugadorRepository {
                 it.setInt(3, item.edad)
                 it.setString(4, item.nacionalidad)
                 it.setInt(5, item.dorsal)
-                it.setString(6, item.posicion.toString())
-                it.setLong(7, item.idEquipo)
+                it.setString(6, item.apodo)
+                it.setString(7, item.posicion.toString())
+                it.setLong(8, item.idEquipo)
+                it.executeUpdate()
 
                 newId = it.generatedKeys.getLong(1)
-                it.executeUpdate()
             }
         }
         return item.copy(id = newId)
@@ -104,7 +103,7 @@ class JugadorRepositoryImpl(val database: DatabaseManager) : JugadorRepository {
     }
 
     override fun findById(id: Long): Jugador? {
-        val existe: Jugador?
+        val jugador: Jugador?
         connection.use { con ->
             val sql = """
                 SELECT * FROM jugador WHERE id = ?
@@ -116,7 +115,7 @@ class JugadorRepositoryImpl(val database: DatabaseManager) : JugadorRepository {
 
                 val resultSet = it.executeQuery()
                 resultSet.use { rs ->
-                    existe = if (rs.next()) Jugador(
+                    jugador = if (rs.next()) Jugador(
                         rs.getLong(1),
                         rs.getString(2),
                         rs.getString(3),
@@ -130,16 +129,16 @@ class JugadorRepositoryImpl(val database: DatabaseManager) : JugadorRepository {
                 }
             }
         }
-        return existe
+        return jugador
     }
 
     override fun update(item: Jugador): Jugador? {
-        val existe = findById(item.id)
-        if (existe == null) return null
+        val jugador = findById(item.id)
+        if (jugador == null) return null
         else {
             connection.use { con ->
                 val sql = """
-                UPDATE jugador SET nombre = ?, apellidos = ?, edad = ?, nacionalidad = ?, dorsal = ?, apodo = ?, posicion = ?, idEquipo = ? WHERE id = ?
+                UPDATE jugador SET nombre = ?, apellidos = ?, edad = ?, nacionalidad = ?, dorsal = ?, apodo = ?, posicion = ?, id_equipo = ? WHERE id = ?
             """.trimIndent()
 
                 val stmt = con.prepareStatement(sql)
@@ -154,12 +153,11 @@ class JugadorRepositoryImpl(val database: DatabaseManager) : JugadorRepository {
                     it.setLong(8, item.idEquipo)
                     it.setLong(9, item.id)
 
-
                     it.executeUpdate()
                 }
             }
         }
-        return existe
+        return jugador
     }
 
     override fun delete(item: Jugador): Jugador? {

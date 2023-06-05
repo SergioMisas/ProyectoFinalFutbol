@@ -23,7 +23,6 @@ class AppConfig {
     private fun loadProperties() {
         val properties = Properties()
         properties.load(ClassLoader.getSystemResourceAsStream("config.properties"))
-        logger.warn { "Properties loaded: $properties" }
         dbUrl = properties.getProperty("db.url", "jdbc:sqlite:futdam.db")
         dbPath = properties.getProperty("db.path", "futdam.db")
         dataPath = properties.getProperty("data.path", "data")

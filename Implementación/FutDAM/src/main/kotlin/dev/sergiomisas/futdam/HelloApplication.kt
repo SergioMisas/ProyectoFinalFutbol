@@ -6,6 +6,7 @@ import javafx.fxml.FXMLLoader
 import javafx.scene.Scene
 import javafx.stage.Stage
 import org.koin.core.context.startKoin
+import dev.sergiomisas.futdam.routes.RoutesManager
 
 class HelloApplication : Application() {
     override fun start(stage: Stage) {
@@ -13,12 +14,11 @@ class HelloApplication : Application() {
             printLogger()
             modules(koinModule)
         }
-        val fxmlLoader = FXMLLoader(HelloApplication::class.java.getResource("hello-view.fxml"))
-        val scene = Scene(fxmlLoader.load())
-        stage.title = "FutDAM"
-        stage.scene = scene
-        stage.isResizable = false
-        stage.show()
+        RoutesManager.apply {
+            app = this@HelloApplication
+        }.run {
+            initMainView(stage)
+        }
     }
 }
 
